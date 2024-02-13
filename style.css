@@ -1,5 +1,26 @@
-#pokedex {
-    min-height: 50vh;
-    background-color: red;
-    color: white;
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  background-color: rgb(50, 50, 50);
+}
+
+header {
+  display: flex;
+  justify-content: center;
+}
+
+.headline {
+  height: 80px;
+  width: 60%;
+  background-color: white;
+  text-align: center;
+  color: rgb(145, 145, 145);
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }

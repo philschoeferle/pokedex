@@ -4,27 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pokédex</title>
+    <link rel="icon" type="image/png" href="imgs/icons/snorlax-icon.png" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="fonts.css" />
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="loadPokemon()">
     <header>
-      <div class="headline">
-        <h1>Pokédex</h1>
-      </div>
+      <img class="icon" src="imgs/icons/snorlax-icon.png" />
+      <h1>Pokédex</h1>
     </header>
-    <div class="search-container">
-      <h2>Name oder ID</h2>
-      <div>
-        <input type="text" />
-        <button></button>
+    <div class="main">
+      <div class="search-container">
+        <div class="search-bar">
+          <input
+            id="search-bar"
+            type="text"
+            placeholder="Suche dein Pokemon!"
+          />
+          <img class="search-icon" src="imgs/icons/search-icon.png" />
+        </div>
+        <p>Hier kannst du die Pokemons nach Namen oder ID Filtern!</p>
       </div>
-      <p>Hier kannst du die Pokemons nach Namen oder ID Filtern!</p>
-    </div>
-    <div id="pokedex">
-      <h1 id="pokemonName"></h1>
-      <img id="pokemonImage" />
+      <div id="pokedex">
+        <h2 id="pokemonName"></h2>
+        <img id="pokemonImage" />
+      </div>
     </div>
   </body>
 </html>

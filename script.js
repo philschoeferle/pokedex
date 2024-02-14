@@ -1,7 +1,5 @@
 let currentPokemon;
 
-
-
 async function loadPokemon() {
   let url = "https://pokeapi.co/api/v2/pokemon/gengar";
   let response = await fetch(url);
@@ -9,6 +7,11 @@ async function loadPokemon() {
 
   renderPokemonInfo();
   pokemonImage();
+}
+
+function renderPokemon() {
+  let container = document.getElementById("pokedex");
+  container.innerHTML = `<div></div>`;
 }
 
 function renderPokemonInfo() {

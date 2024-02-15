@@ -70,3 +70,22 @@ input:focus {
   border-radius: 30px;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.4);
 }
+
+.pokedex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pokedex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  padding: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+}

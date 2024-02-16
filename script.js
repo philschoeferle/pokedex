@@ -13,20 +13,47 @@ async function showAllPokemon() {
     let pokemonName = allPokemon["results"][i]["name"];
     let url = `https://pokeapi.co/api/v2/pokemon/${i + 1}/`;
     let response = await fetch(url);
-    let pokemonImg = await response.json();
-    pokemonImg = pokemonImg["sprites"]["front_default"];
+    let pokemon = await response.json();
 
-    renderPokemon(pokemonName, pokemonImg);
+    renderPokemon(pokemon, pokemonName);
   }
 }
 
-function renderPokemon(pokemonName, pokemonImg) {
-  let container = document.getElementById("pokedex");
-  let capitalizeFirstLetter = pokemonName[0].toUpperCase() + pokemonName.slice(1);
-  container.innerHTML += `
-    <div class="pokedex">
-      <h2>${capitalizeFirstLetter}</h2>
-      <img src="${pokemonImg}" />
-    </div>
-  `;
+function renderPokemon(pokemon, pokemonName) {
+  let container = document.getElementById("pokedex-container");
+  let pokemonImg = pokemon["sprites"]["front_default"];
+  let pokemonId = pokemon["id"];
+  let capitalizeFirstLetter =
+    pokemonName[0].toUpperCase() + pokemonName.slice(1);
+
+  let pokemonTypes = renderPokemonType(pokemon);
+  container.innerHTML += pokedexHTML(
+    pokemonImg,
+    pokemonId,
+    capitalizeFirstLetter,
+    pokemonTypes
+  );
 }
+
+function pokedexHTML(
+  pokemonImg,
+  pokemonId,
+  capitalizeFirstLetter,
+  pokemonTypes
+) {
+  return `
+  <div class="pokedex" id="pokedex">
+    <span>ID: #${pokemonId}</span>
+    <h2>${capitalizeFirstLetter}</h2>
+    <img src="${pokemonImg}" />
+    ${pokemonTypes.map(type => `<div class="type ${type}">${type.toUpperCase()}</div>`).join('')}
+  </div>
+`;
+}
+
+function renderPokemonType(pokemon) {
+  let pokemonTypes = pokemon["types"].map(type => type["type"]["name"]);
+  return pokemonTypes;
+}
+
+

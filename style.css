@@ -5,7 +5,7 @@ body {
   background-image: url("imgs/background/background.png");
   background-size: 400px;
   background-repeat: no-repeat;
-  background-position: right;
+  background-position: top right;
   background-blend-mode: soft-light;
 }
 
@@ -88,4 +88,19 @@ input:focus {
   padding: 40px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+}
+
+.type {
+  padding: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.fire {
+  background-color: red;
+  color: white;
+}
+
+.type-grass {
+  background-color: aquamarine;
 }

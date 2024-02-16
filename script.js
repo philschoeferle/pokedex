@@ -35,6 +35,11 @@ function renderPokemon(pokemon, pokemonName) {
   );
 }
 
+function renderPokemonType(pokemon) {
+  let pokemonTypes = pokemon["types"].map((type) => type["type"]["name"]);
+  return pokemonTypes;
+}
+
 function pokedexHTML(
   pokemonImg,
   pokemonId,
@@ -46,14 +51,11 @@ function pokedexHTML(
     <span>ID: #${pokemonId}</span>
     <h2>${capitalizeFirstLetter}</h2>
     <img src="${pokemonImg}" />
-    ${pokemonTypes.map(type => `<div class="type ${type}">${type.toUpperCase()}</div>`).join('')}
+    <div class="pokedex-types">
+    ${pokemonTypes
+      .map((type) => `<div class="type ${type}">${type.toUpperCase()}</div>`)
+      .join("")}
+    </div>
   </div>
 `;
 }
-
-function renderPokemonType(pokemon) {
-  let pokemonTypes = pokemon["types"].map(type => type["type"]["name"]);
-  return pokemonTypes;
-}
-
-

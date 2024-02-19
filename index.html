@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="fonts.css" />
     <script src="script.js"></script>
   </head>
-  <body onload="loadAllPokemon()">
+  <body onload="loadOneSitePokemons()">
     <header>
       <img class="icon" src="imgs/icons/snorlax-icon.png" />
       <h1>Pokédex</h1>
@@ -22,11 +22,20 @@
             type="text"
             placeholder="Suche dein Pokemon!"
           />
-          <img class="search-icon" src="imgs/icons/search-icon.png" />
+          <img
+            class="search-icon"
+            src="imgs/icons/search-icon.png"
+            onclick="searchPokemon()"
+          />
         </div>
         <p>Hier kannst du die Pokemon nach Namen oder ID Filtern!</p>
       </div>
       <div id="pokedex-container" class="pokedex-container"></div>
     </div>
+    <div
+      id="pokedex-seperate-container"
+      class="pokedex-seperate-container hidden"
+      onclick="toggleHiddenContainer()"
+    ></div>
   </body>
 </html>

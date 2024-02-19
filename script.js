@@ -1,19 +1,19 @@
-let allPokemon;
+let oneSitePokemons;
 
-async function loadAllPokemon() {
-  let url = "https://pokeapi.co/api/v2/pokemon";
+async function loadOneSitePokemons() {
+  let url = "https://pokeapi.co/api/v2/pokemon/";
   let response = await fetch(url);
-  allPokemon = await response.json();
+  oneSitePokemons = await response.json();
 
-  showAllPokemon();
+  showOneSitePokemons();
 }
 
-async function showAllPokemon() {
-  for (let i = 0; i < allPokemon["results"].length; i++) {
-    let pokemonName = allPokemon["results"][i]["name"];
+async function showOneSitePokemons() {
+  for (let i = 0; i < oneSitePokemons["results"].length; i++) {
+    let pokemonName = oneSitePokemons["results"][i]["name"];
     let url = `https://pokeapi.co/api/v2/pokemon/${i + 1}/`;
     let response = await fetch(url);
-    let pokemon = await response.json();
+    pokemon = await response.json();
 
     renderPokemon(pokemon, pokemonName);
   }
@@ -23,21 +23,24 @@ function renderPokemon(pokemon, pokemonName) {
   let container = document.getElementById("pokedex-container");
   let pokemonImg = pokemon["sprites"]["front_default"];
   let pokemonId = pokemon["id"];
-  let capitalizeFirstLetter =
-    pokemonName[0].toUpperCase() + pokemonName.slice(1);
+  let capitalizedFirstLetter = capitalizeFirstLetter(pokemonName);
 
   let pokemonTypes = renderPokemonType(pokemon);
   container.innerHTML += pokedexHTML(
     pokemonImg,
     pokemonId,
-    capitalizeFirstLetter,
+    capitalizedFirstLetter,
     pokemonTypes
   );
 }
 
+function capitalizeFirstLetter(pokemonName) {
+  return pokemonName[0].toUpperCase() + pokemonName.slice(1);
+}
+
 function renderPokemonType(pokemon) {
-  let pokemonTypes = pokemon["types"].map((type) => type["type"]["name"]);
-  return pokemonTypes;
+  let pokemonType = pokemon["types"].map((type) => type["type"]["name"]);
+  return pokemonType;
 }
 
 function pokedexHTML(
@@ -47,7 +50,7 @@ function pokedexHTML(
   pokemonTypes
 ) {
   return `
-  <div class="pokedex" id="pokedex">
+  <div class="pokedex" id="pokedex${pokemonId}" onclick="showSeperatePokedex(${pokemonId})">
     <span>ID: #${pokemonId}</span>
     <h2>${capitalizeFirstLetter}</h2>
     <img src="${pokemonImg}" />
@@ -57,5 +60,48 @@ function pokedexHTML(
       .join("")}
     </div>
   </div>
-`;
+  `;
+}
+
+async function showSeperatePokedex(pokemonId) {
+  let seperatedPokedex = document.getElementById("pokedex-seperate-container");
+  let url = `https://pokeapi.co/api/v2/pokemon/${pokemonId}/`;
+  let response = await fetch(url);
+  let seperatedPokemon = await response.json();
+  let pokemonName = seperatedPokemon["species"]["name"];
+  pokemonName = capitalizeFirstLetter(pokemonName);
+  let pokemonImg =
+    seperatedPokemon["sprites"]["other"]["official-artwork"]["front_default"];
+
+  seperatedPokedex.innerHTML = seperatePokedex(
+    pokemonId,
+    pokemonName,
+    pokemonImg
+  );
+  toggleHiddenContainer();
+}
+
+function seperatePokedex(pokemonId, pokemonName, pokemonImg) {
+  return `
+  <div class="pokedex-seperate">
+    <span>ID: #${pokemonId}</span>
+    <h2>${pokemonName}</h2>
+    <img src="${pokemonImg}" class="pokedex-seperate-img"/>
+  </div>
+  `;
+}
+
+function toggleHiddenContainer() {
+  let pokedexSeperate = document.getElementById("pokedex-seperate-container");
+  pokedexSeperate.classList.toggle("hidden");
+}
+
+async function searchPokemon() {
+  let search = document.getElementById("search-bar").value;
+
+  let url = `https://pokeapi.co/api/v2/pokemon/${search}/?limit=100000&offset=0`;
+  let response = await fetch(url);
+  let searchedPokemon = await response.json();
+
+  console.log(searchedPokemon);
 }

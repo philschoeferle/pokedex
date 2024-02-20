@@ -72,21 +72,44 @@ async function showSeperatePokedex(pokemonId) {
   pokemonName = capitalizeFirstLetter(pokemonName);
   let pokemonImg =
     seperatedPokemon["sprites"]["other"]["official-artwork"]["front_default"];
+  let pokemonStats = getPokemonStats(seperatedPokemon);
 
   seperatedPokedex.innerHTML = seperatePokedex(
     pokemonId,
     pokemonName,
-    pokemonImg
+    pokemonImg,
+    pokemonStats
   );
   toggleHiddenContainer();
 }
 
-function seperatePokedex(pokemonId, pokemonName, pokemonImg) {
+function getPokemonStats(seperatedPokemon) {
+  let seperatedPokemonStats = [];
+  let pokemonStats = seperatedPokemon["stats"];
+  for (let i = 0; i < pokemonStats.length; i++) {
+    seperatedPokemonStats.push(pokemonStats[i]);
+  }
+  return seperatedPokemonStats;
+}
+
+function seperatePokedex(pokemonId, pokemonName, pokemonImg, pokemonStats) {
+  let statChart = "";
+  for (let i = 0; i < pokemonStats.length; i++) {
+    let pokemonStatName = capitalizeFirstLetter(
+      pokemonStats[i]["stat"]["name"]
+    );
+    let pokemonStatNumber = pokemonStats[i]["base_stat"];
+    statChart += `<div>${pokemonStatName}: ${pokemonStatNumber}</div>`;
+  }
   return `
   <div class="pokedex-seperate">
     <span>ID: #${pokemonId}</span>
     <h2>${pokemonName}</h2>
     <img src="${pokemonImg}" class="pokedex-seperate-img"/>
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
+    <div>${statChart}</div>
   </div>
   `;
 }

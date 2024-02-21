@@ -81,6 +81,7 @@ async function showSeperatePokedex(pokemonId) {
     pokemonStats
   );
   toggleHiddenContainer();
+  renderChart(pokemonStats);
 }
 
 function getPokemonStats(seperatedPokemon) {
@@ -107,7 +108,7 @@ function seperatePokedex(pokemonId, pokemonName, pokemonImg, pokemonStats) {
     <h2>${pokemonName}</h2>
     <img src="${pokemonImg}" class="pokedex-seperate-img"/>
     <div>
-      <canvas id="myChart"></canvas>
+      <canvas id="myChart" height="200px" width="500px"></canvas>
     </div>
     <div>${statChart}</div>
   </div>

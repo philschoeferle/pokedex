@@ -11,7 +11,6 @@ function renderChart(pokemonStats) {
       labels: ["Hp", "Attack", "Defense", "Sp-Attack", "Sp-Defense", "Speed"],
       datasets: [
         {
-          label: "Stats",
           data: pokemonStatNumber,
           backgroundColor: [
             "rgba(120, 200, 80, 0.4)",
@@ -34,6 +33,15 @@ function renderChart(pokemonStats) {
       ],
     },
     options: {
+      plugins: {
+        legend: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: "Pokemon Stats",
+        },
+      },
       indexAxis: "y",
       scales: {
         y: {
@@ -44,9 +52,12 @@ function renderChart(pokemonStats) {
           },
         },
         x: {
-          stepSize: 10,
           max: 120,
-        }
+          ticks: {
+            stepSize: 10,
+            autoSkip: false,
+          },
+        },
       },
     },
   });

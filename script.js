@@ -100,10 +100,16 @@ function getPokemonStats(seperatedPokemon) {
   return seperatedPokemonStats;
 }
 
-function seperatePokedex(pokemonId, pokemonName, pokemonImg, pokemonTypes, pokemonDetails) {
+function seperatePokedex(
+  pokemonId,
+  pokemonName,
+  pokemonImg,
+  pokemonTypes,
+  pokemonDetails
+) {
   return `
   <div class="pokedex-seperate">
-    <img class="icon pokedex-seperate-arrow" src="imgs/icons/arrow-left.png">
+    <img onclick="prevPokemon(${pokemonId})" class="icon pokedex-seperate-arrow" src="imgs/icons/arrow-left.png">
     <div class="pokedex-seperate-main">
       <span>ID: #${pokemonId}</span>
       <h2>${pokemonName}</h2>
@@ -116,7 +122,7 @@ function seperatePokedex(pokemonId, pokemonName, pokemonImg, pokemonTypes, pokem
       </div>
       <div class="pokedex-seperate-details"><span>${pokemonDetails}</span></div>
     </div>
-    <img class="icon pokedex-seperate-arrow" src="imgs/icons/arrow-right.png">
+    <img onclick="nextPokemon(${pokemonId})" class="icon pokedex-seperate-arrow" src="imgs/icons/arrow-right.png">
   </div>
   `;
 }
@@ -125,14 +131,40 @@ async function getPokemonDetails(pokemonId) {
   let url = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
   let response = await fetch(url);
   let pokemon = await response.json();
-  let pokemonDetails = pokemon["flavor_text_entries"][1]["flavor_text"];
-  pokemonDetails = removeSpecialCharacter(pokemonDetails, "");
 
-  return pokemonDetails;
+  if (pokemon["flavor_text_entries"].length > 1) {
+    let pokemonDetails = pokemon["flavor_text_entries"][1]["flavor_text"];
+    pokemonDetails = removeSpecialCharacter(pokemonDetails, "");
+    return pokemonDetails;
+  } else {
+    return "";
+  }
+}
+
+function prevPokemon(pokemonId) {
+  let prev = pokemonId - 1;
+
+  if (prev > 0) {
+    showSeperatePokedex(prev);
+  } else {
+    pokemonId = 1025;
+    showSeperatePokedex(pokemonId);
+  }
+}
+
+function nextPokemon(pokemonId) {
+  let next = pokemonId + 1;
+
+  if (next <= 1025) {
+    showSeperatePokedex(next);
+  } else {
+    pokemonId = 1;
+    showSeperatePokedex(pokemonId);
+  }
 }
 
 function removeSpecialCharacter(text, character) {
-  return text.split(character).join('');
+  return text.split(character).join("");
 }
 
 function toggleHiddenContainer() {

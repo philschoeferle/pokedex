@@ -52,9 +52,9 @@ function renderChart(pokemonStats) {
           },
         },
         x: {
-          max: 120,
+          max: 140,
           ticks: {
-            stepSize: 10,
+            stepSize: 20,
             autoSkip: false,
           },
         },

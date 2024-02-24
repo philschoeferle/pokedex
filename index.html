@@ -11,7 +11,7 @@
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
-  <body onload="loadOneSitePokemons()">
+  <body onload="loadOnePokemonSite()">
     <header>
       <img class="icon" src="imgs/icons/snorlax-icon.png" />
       <h1>Pokédex</h1>
@@ -33,6 +33,11 @@
         <p>Hier kannst du die Pokemon nach Namen oder ID Filtern!</p>
       </div>
       <div id="pokedex-container" class="pokedex-container"></div>
+      <div class="pokedex-next-container">
+        <button class="more-pokemon-button" onclick="loadNextPokemonSite()">
+          Lade weitere Pokémon!
+        </button>
+      </div>
     </div>
     <div
       id="pokedex-seperate-container"

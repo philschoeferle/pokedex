@@ -40,6 +40,9 @@ function renderChart(pokemonStats) {
         title: {
           display: true,
           text: "Pokemon Stats",
+          font: {
+            size: 14,
+          },
         },
       },
       indexAxis: "y",

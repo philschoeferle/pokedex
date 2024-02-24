@@ -1,20 +1,41 @@
 let oneSitePokemons;
+let offset = 0;
 
-async function loadOneSitePokemons() {
-  let url = "https://pokeapi.co/api/v2/pokemon/";
+async function loadOnePokemonSite() {
+  let url = `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0`;
   let response = await fetch(url);
   oneSitePokemons = await response.json();
 
-  showOneSitePokemons();
+  showOnePokemonSite();
 }
 
-async function showOneSitePokemons() {
+async function showOnePokemonSite() {
   for (let i = 0; i < oneSitePokemons["results"].length; i++) {
     let pokemonName = oneSitePokemons["results"][i]["name"];
-    let url = `https://pokeapi.co/api/v2/pokemon/${i + 1}/`;
+    let url = `https://pokeapi.co/api/v2/pokemon/${i + 1}`;
     let response = await fetch(url);
     pokemon = await response.json();
 
+    renderPokemon(pokemon, pokemonName);
+  }
+}
+
+async function loadNextPokemonSite() {
+  offset += 20;
+  let url = `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${offset}`;
+  let response = await fetch(url);
+  let nextPokemonSite = await response.json();
+
+  showNextPokemonSite(nextPokemonSite);
+}
+
+async function showNextPokemonSite(nextPokemonSite) {
+  for (let i = 0; i < nextPokemonSite["results"].length; i++) {
+    let pokemons = nextPokemonSite["results"][i];
+    let pokemonName = pokemons["name"];
+    let pokemonUrl = pokemons.url;
+    let response = await fetch(pokemonUrl);
+    let pokemon = await response.json();
     renderPokemon(pokemon, pokemonName);
   }
 }
@@ -24,8 +45,8 @@ function renderPokemon(pokemon, pokemonName) {
   let pokemonImg = pokemon["sprites"]["front_default"];
   let pokemonId = pokemon["id"];
   let capitalizedFirstLetter = capitalizeFirstLetter(pokemonName);
-
   let pokemonTypes = getPokemonType(pokemon);
+
   container.innerHTML += pokedexHTML(
     pokemonImg,
     pokemonId,
@@ -120,7 +141,10 @@ function seperatePokedex(
       <div class="chart-container">
         <canvas id="myChart" height="200px" width="500px"></canvas>
       </div>
-      <div class="pokedex-seperate-details"><span>${pokemonDetails}</span></div>
+      <div class="pokedex-seperate-details">
+        <span class="pokedex-seperate-details-headline">POKÉDEX ENTRY</span>
+        <span>${pokemonDetails}</span>
+      </div>
     </div>
     <img onclick="nextPokemon(${pokemonId})" class="icon pokedex-seperate-arrow" src="imgs/icons/arrow-right.png">
   </div>
@@ -164,7 +188,7 @@ function nextPokemon(pokemonId) {
 }
 
 function removeSpecialCharacter(text, character) {
-  return text.split(character).join("");
+  return text.split(character).join(" ");
 }
 
 function toggleHiddenContainer() {

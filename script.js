@@ -156,12 +156,16 @@ async function getPokemonDetails(pokemonId) {
   let response = await fetch(url);
   let pokemon = await response.json();
 
-  if (pokemon["flavor_text_entries"].length > 1) {
-    let pokemonDetails = pokemon["flavor_text_entries"][1]["flavor_text"];
+  let englishDetails = pokemon["flavor_text_entries"].find(
+    (entry) => entry["language"]["name"] === "en"
+  );
+
+  if (englishDetails) {
+    let pokemonDetails = englishDetails["flavor_text"];
     pokemonDetails = removeSpecialCharacter(pokemonDetails, "");
     return pokemonDetails;
   } else {
-    return "";
+    return "No Pokédex Entry yet!";
   }
 }
 
@@ -196,12 +200,45 @@ function toggleHiddenContainer() {
   pokedexSeperate.classList.toggle("hidden");
 }
 
-async function searchPokemon() {
+function searchPokemon() {
   let search = document.getElementById("search-bar").value;
 
-  let url = `https://pokeapi.co/api/v2/pokemon/${search}/?limit=100000&offset=0`;
-  let response = await fetch(url);
-  let searchedPokemon = await response.json();
-
-  console.log(searchedPokemon);
+  if (!isNaN(search)) {
+    showSeperatePokedex(parseInt(search));
+  } else {
+    convertIdToName(search);
+  }
 }
+
+async function convertIdToName(pokemonName) {
+  let url = `https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}/`;
+  let response = await fetch(url);
+
+  if (response.ok) {
+    let pokemon = await response.json();
+    let pokemonId = pokemon["id"];
+    pokemonName = capitalizeFirstLetter(pokemonName);
+    let pokemonImg =
+      pokemon["sprites"]["other"]["official-artwork"]["front_default"];
+    let pokemonStats = getPokemonStats(pokemon);
+    let pokemonTypes = getPokemonType(pokemon);
+    let pokemonDetails = await getPokemonDetails(pokemonId);
+
+    let seperatedPokedex = document.getElementById(
+      "pokedex-seperate-container"
+    );
+    seperatedPokedex.innerHTML = seperatePokedex(
+      pokemonId,
+      pokemonName,
+      pokemonImg,
+      pokemonTypes,
+      pokemonDetails
+    );
+
+    toggleHiddenContainer();
+    renderChart(pokemonStats);
+  } else {
+    alert("gibt's  net");
+  }
+}
+

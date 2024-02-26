@@ -55,7 +55,7 @@ function renderChart(pokemonStats) {
           },
         },
         x: {
-          max: 140,
+          max: 160,
           ticks: {
             stepSize: 20,
             autoSkip: false,

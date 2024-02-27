@@ -92,24 +92,29 @@ async function showSeperatePokedex(pokemonId) {
   let seperatedPokedex = document.getElementById("pokedex-seperate-container");
   let url = `https://pokeapi.co/api/v2/pokemon/${pokemonId}/`;
   let response = await fetch(url);
-  let seperatedPokemon = await response.json();
-  let pokemonName = seperatedPokemon["species"]["name"];
-  pokemonName = capitalizeFirstLetter(pokemonName);
-  let pokemonImg =
-    seperatedPokemon["sprites"]["other"]["official-artwork"]["front_default"];
-  let pokemonStats = getPokemonStats(seperatedPokemon);
-  let pokemonTypes = getPokemonType(seperatedPokemon);
-  let pokemonDetails = await getPokemonDetails(pokemonId);
 
-  seperatedPokedex.innerHTML = seperatePokedex(
-    pokemonId,
-    pokemonName,
-    pokemonImg,
-    pokemonTypes,
-    pokemonDetails
-  );
-  toggleHiddenContainer();
-  renderChart(pokemonStats);
+  if (response.ok) {
+    let seperatedPokemon = await response.json();
+    let pokemonName = seperatedPokemon["species"]["name"];
+    pokemonName = capitalizeFirstLetter(pokemonName);
+    let pokemonImg =
+      seperatedPokemon["sprites"]["other"]["official-artwork"]["front_default"];
+    let pokemonStats = getPokemonStats(seperatedPokemon);
+    let pokemonTypes = getPokemonType(seperatedPokemon);
+    let pokemonDetails = await getPokemonDetails(pokemonId);
+
+    seperatedPokedex.innerHTML = seperatePokedex(
+      pokemonId,
+      pokemonName,
+      pokemonImg,
+      pokemonTypes,
+      pokemonDetails
+    );
+    toggleHiddenContainer();
+    renderChart(pokemonStats);
+  } else {
+    searchedPokemonNotExisting(response);
+  }
 }
 
 function getPokemonStats(seperatedPokemon) {
@@ -145,6 +150,7 @@ function seperatePokedex(
         <span class="pokedex-seperate-details-headline">POKÉDEX ENTRY</span>
         <span>${pokemonDetails}</span>
       </div>
+      <div>${getPokemonEvoChain(pokemonId)}</div>
     </div>
     <img onclick="nextPokemon(${pokemonId})" class="icon pokedex-seperate-arrow" src="imgs/icons/arrow-right.png">
   </div>
@@ -166,6 +172,32 @@ async function getPokemonDetails(pokemonId) {
     return pokemonDetails;
   } else {
     return "No Pokédex Entry yet!";
+  }
+}
+
+async function getPokemonEvoChain(pokemonId) {
+  let url = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
+  let response = await fetch(url);
+  let pokemon = await response.json();
+  let evoChainUrl = pokemon["evolution_chain"]["url"];
+
+  showPokemonEvoChain(evoChainUrl);
+}
+
+async function showPokemonEvoChain(evoChainUrl) {
+  let response = await fetch(evoChainUrl);
+  let pokemon = await response.json();
+  let evoChain = pokemon["chain"]["evolves_to"];
+
+  for (let i = 0; i < evoChain.length; i++) {
+    let evolving = evoChain[i];
+    let firstEvo = evolving["species"]["name"];
+    for (let j = 0; j < evolving.length; j++) {
+      let test = evolving[j]["species"]["name"];
+      console.log(test);
+    }
+    console.log(evolving);
+    console.log(firstEvo);
   }
 }
 
@@ -197,16 +229,21 @@ function removeSpecialCharacter(text, character) {
 
 function toggleHiddenContainer() {
   let pokedexSeperate = document.getElementById("pokedex-seperate-container");
+  let body = document.getElementById("body");
+
   pokedexSeperate.classList.toggle("hidden");
+  body.classList.toggle("stop-scrolling");
 }
 
 function searchPokemon() {
-  let search = document.getElementById("search-bar").value;
+  let search = document.getElementById("search-bar");
 
-  if (!isNaN(search)) {
-    showSeperatePokedex(parseInt(search));
+  if (!isNaN(search.value)) {
+    showSeperatePokedex(parseInt(search.value));
+    search.value = "";
   } else {
-    convertIdToName(search);
+    convertIdToName(search.value);
+    search.value = "";
   }
 }
 
@@ -238,7 +275,22 @@ async function convertIdToName(pokemonName) {
     toggleHiddenContainer();
     renderChart(pokemonStats);
   } else {
-    alert("gibt's  net");
+    searchedPokemonNotExisting(response);
   }
 }
 
+function searchedPokemonNotExisting(response) {
+  if (response.status === 404) {
+    let seperatedPokedex = document.getElementById(
+      "pokedex-seperate-container"
+    );
+    seperatedPokedex.innerHTML = `
+      <div class="pokedex-seperate-main">
+        <h2>Das gesuchte Pokémon existiert nicht.</h2>
+        <p>Überprüfe die Schreibweise oder die ID!</p>
+        <span>(PS: Nutze ausschließlich die englischen Pokémon-Namen.)</span>
+      </div>`;
+  }
+
+  toggleHiddenContainer();
+}

@@ -16,6 +16,10 @@ header {
   height: 80px;
   padding: 16px 32px;
   gap: 8px;
+  margin-bottom: 24px;
+  background-color: rgba(214, 230, 241, 0.5);
+  border-bottom: 1px solid rgb(214, 230, 241);
+  box-shadow: 0 0 6px 0 rgb(214, 230, 241);
 }
 
 h1 {
@@ -183,6 +187,11 @@ input:focus {
 
 .hidden {
   visibility: hidden;
+}
+
+.stop-scrolling {
+  height: 100%;
+  overflow: hidden;
 }
 
 .chart-container {

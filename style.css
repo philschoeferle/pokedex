@@ -26,6 +26,11 @@ h1 {
   font-size: 40px;
 }
 
+h2 {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
 input {
   width: 50%;
   height: 24px;
@@ -46,7 +51,7 @@ input:focus {
 }
 
 .main {
-  margin: 0 320px;
+  margin: 0 160px;
 }
 
 .search-container {
@@ -151,6 +156,13 @@ input:focus {
   gap: 8px;
 }
 
+.pokedex-seperate-name-id {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
 .pokedex-seperate-arrow {
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 20px;
@@ -168,10 +180,10 @@ input:focus {
   align-items: center;
   justify-content: center;
   width: 520px;
-  height: 75vh;
+  height: 82vh;
   padding: 24px;
   background-color: rgb(246, 248, 252);
-  border-radius: 4%;
+  border-radius: 24px;
   background-image: url("imgs/background/background.png");
   background-size: 400px;
   background-repeat: no-repeat;
@@ -202,6 +214,11 @@ input:focus {
   border-radius: 24px;
 }
 
+.chart {
+  width: 400px;
+  height: 160px;
+}
+
 .pokedex-seperate-details {
   display: flex;
   align-items: center;
@@ -216,8 +233,24 @@ input:focus {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-.pokedex-seperate-details-headline {
+.bold-headline {
   font-weight: bold;
+}
+
+.pokemon-seperate-evos {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.pokemon-evo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .type {
@@ -319,4 +352,59 @@ input:focus {
 .stellar {
   background-color: rgb(53, 172, 231);
   color: white;
+}
+
+@media (max-width: 1200px) {
+  .main {
+    margin: 0 60px;
+  }
+}
+
+@media (max-width: 710px) {
+  .main {
+    margin: 0;
+  }
+
+  p {
+    text-align: center;
+    margin-left: 60px;
+    margin-right: 60px;
+  }
+
+  .left {
+    position: absolute;
+    bottom: 10px;
+    left: 100px;
+  }
+
+  .right {
+    position: absolute;
+    bottom: 10px;
+    right: 100px;
+  }
+}
+
+@media (max-width: 600px) {
+  .pokedex-seperate-main {
+    width: 80vw;
+    height: 75vh;
+  }
+
+  .pokedex-seperate-details {
+    width: auto;
+    font-size: 14px;
+  }
+
+  .bold-headline {
+    font-size: 16px;
+  }
+
+  .evo-img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .chart {
+    width: 250px;
+  }
 }

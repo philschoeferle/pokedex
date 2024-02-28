@@ -102,13 +102,15 @@ async function showSeperatePokedex(pokemonId) {
     let pokemonStats = getPokemonStats(seperatedPokemon);
     let pokemonTypes = getPokemonType(seperatedPokemon);
     let pokemonDetails = await getPokemonDetails(pokemonId);
+    let pokemonEvoChainUrls = await getPokemonEvoChainUrl(pokemonId);
 
     seperatedPokedex.innerHTML = seperatePokedex(
       pokemonId,
       pokemonName,
       pokemonImg,
       pokemonTypes,
-      pokemonDetails
+      pokemonDetails,
+      pokemonEvoChainUrls
     );
     toggleHiddenContainer();
     renderChart(pokemonStats);
@@ -131,28 +133,36 @@ function seperatePokedex(
   pokemonName,
   pokemonImg,
   pokemonTypes,
-  pokemonDetails
+  pokemonDetails,
+  pokemonEvoChainUrls
 ) {
   return `
   <div class="pokedex-seperate">
-    <img onclick="prevPokemon(${pokemonId})" class="icon pokedex-seperate-arrow" src="imgs/icons/arrow-left.png">
+    <img onclick="prevPokemon(${pokemonId})" class="icon pokedex-seperate-arrow left" src="imgs/icons/arrow-left.png">
     <div class="pokedex-seperate-main">
-      <span>ID: #${pokemonId}</span>
-      <h2>${pokemonName}</h2>
+      <div class="pokedex-seperate-name-id">
+        <span>#${pokemonId}</span>
+        <h2>${pokemonName}</h2>
+      </div>
       <img src="${pokemonImg}" class="pokedex-seperate-img"/>
       <div class="pokedex-types">
         ${renderPokemonType(pokemonTypes)}
       </div>
       <div class="chart-container">
-        <canvas id="myChart" height="200px" width="500px"></canvas>
+        <canvas id="myChart" class="chart"></canvas>
       </div>
       <div class="pokedex-seperate-details">
-        <span class="pokedex-seperate-details-headline">POKÉDEX ENTRY</span>
+        <span class="bold-headline">POKÉDEX ENTRY</span>
         <span>${pokemonDetails}</span>
       </div>
-      <div>${getPokemonEvoChain(pokemonId)}</div>
+      <div class="pokemon-seperate-evos">
+        <span class="bold-headline">EVOLUTION</span>
+        <div class="pokemon-evo">
+          ${getEvoChainHtml(pokemonEvoChainUrls)}
+        </div>
+      </div>
     </div>
-    <img onclick="nextPokemon(${pokemonId})" class="icon pokedex-seperate-arrow" src="imgs/icons/arrow-right.png">
+    <img onclick="nextPokemon(${pokemonId})" class="icon pokedex-seperate-arrow right" src="imgs/icons/arrow-right.png">
   </div>
   `;
 }
@@ -175,30 +185,51 @@ async function getPokemonDetails(pokemonId) {
   }
 }
 
-async function getPokemonEvoChain(pokemonId) {
+function getEvoChainHtml(pokemonEvoChainUrls) {
+  let evoChainHtml = "";
+  for (let i = 0; i < pokemonEvoChainUrls.length; i++) {
+    evoChainHtml += `<img src="${pokemonEvoChainUrls[i]}" class="evo-img" />`;
+  }
+  return evoChainHtml;
+}
+
+async function getPokemonEvoChainUrl(pokemonId) {
   let url = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
   let response = await fetch(url);
   let pokemon = await response.json();
   let evoChainUrl = pokemon["evolution_chain"]["url"];
 
-  showPokemonEvoChain(evoChainUrl);
+  return getPokemonEvoChain(evoChainUrl);
 }
 
-async function showPokemonEvoChain(evoChainUrl) {
+async function getPokemonEvoChain(evoChainUrl) {
   let response = await fetch(evoChainUrl);
   let pokemon = await response.json();
-  let evoChain = pokemon["chain"]["evolves_to"];
+  let evoChain = pokemon["chain"];
 
-  for (let i = 0; i < evoChain.length; i++) {
-    let evolving = evoChain[i];
-    let firstEvo = evolving["species"]["name"];
-    for (let j = 0; j < evolving.length; j++) {
-      let test = evolving[j]["species"]["name"];
-      console.log(test);
+  return showPokemonEvoChain(evoChain);
+}
+
+async function showPokemonEvoChain(evoChain) {
+  let evoImgs = [];
+  let currentPokemon = evoChain["species"]["name"];
+  let imgUrl = `https://pokeapi.co/api/v2/pokemon/${currentPokemon}/`;
+  let response = await fetch(imgUrl);
+  let currentPokemonImg = await response.json();
+  let currentEvo = currentPokemonImg["sprites"]["front_default"];
+  evoImgs.push(currentEvo);
+
+  if (evoChain["evolves_to"].length > 0) {
+    for (let i = 0; i < evoChain["evolves_to"].length; i++) {
+      let nextEvo = evoChain["evolves_to"][i];
+      let nextEvoImgs = await showPokemonEvoChain(nextEvo);
+      for (let j = 0; j < nextEvoImgs.length; j++) {
+        evoImgs.push(nextEvoImgs[j]);
+      }
     }
-    console.log(evolving);
-    console.log(firstEvo);
   }
+
+  return evoImgs;
 }
 
 function prevPokemon(pokemonId) {
@@ -260,6 +291,7 @@ async function convertIdToName(pokemonName) {
     let pokemonStats = getPokemonStats(pokemon);
     let pokemonTypes = getPokemonType(pokemon);
     let pokemonDetails = await getPokemonDetails(pokemonId);
+    let pokemonEvoChainUrls = await getPokemonEvoChainUrl(pokemonId);
 
     let seperatedPokedex = document.getElementById(
       "pokedex-seperate-container"
@@ -269,7 +301,8 @@ async function convertIdToName(pokemonName) {
       pokemonName,
       pokemonImg,
       pokemonTypes,
-      pokemonDetails
+      pokemonDetails,
+      pokemonEvoChainUrls
     );
 
     toggleHiddenContainer();

@@ -55,10 +55,6 @@ function renderPokemon(pokemon, pokemonName) {
   );
 }
 
-function capitalizeFirstLetter(pokemonName) {
-  return pokemonName[0].toUpperCase() + pokemonName.slice(1);
-}
-
 function getPokemonType(pokemon) {
   let pokemonType = pokemon["types"].map((type) => type["type"]["name"]);
   return pokemonType;
@@ -232,40 +228,6 @@ async function showPokemonEvoChain(evoChain) {
   return evoImgs;
 }
 
-function prevPokemon(pokemonId) {
-  let prev = pokemonId - 1;
-
-  if (prev > 0) {
-    showSeperatePokedex(prev);
-  } else {
-    pokemonId = 1025;
-    showSeperatePokedex(pokemonId);
-  }
-}
-
-function nextPokemon(pokemonId) {
-  let next = pokemonId + 1;
-
-  if (next <= 1025) {
-    showSeperatePokedex(next);
-  } else {
-    pokemonId = 1;
-    showSeperatePokedex(pokemonId);
-  }
-}
-
-function removeSpecialCharacter(text, character) {
-  return text.split(character).join(" ");
-}
-
-function toggleHiddenContainer() {
-  let pokedexSeperate = document.getElementById("pokedex-seperate-container");
-  let body = document.getElementById("body");
-
-  pokedexSeperate.classList.toggle("hidden");
-  body.classList.toggle("stop-scrolling");
-}
-
 function searchPokemon() {
   let search = document.getElementById("search-bar");
 
@@ -326,4 +288,42 @@ function searchedPokemonNotExisting(response) {
   }
 
   toggleHiddenContainer();
+}
+
+function capitalizeFirstLetter(pokemonName) {
+  return pokemonName[0].toUpperCase() + pokemonName.slice(1);
+}
+
+function prevPokemon(pokemonId) {
+  let prev = pokemonId - 1;
+
+  if (prev > 0) {
+    showSeperatePokedex(prev);
+  } else {
+    pokemonId = 1025;
+    showSeperatePokedex(pokemonId);
+  }
+}
+
+function nextPokemon(pokemonId) {
+  let next = pokemonId + 1;
+
+  if (next <= 1025) {
+    showSeperatePokedex(next);
+  } else {
+    pokemonId = 1;
+    showSeperatePokedex(pokemonId);
+  }
+}
+
+function removeSpecialCharacter(text, character) {
+  return text.split(character).join(" ");
+}
+
+function toggleHiddenContainer() {
+  let pokedexSeperate = document.getElementById("pokedex-seperate-container");
+  let body = document.getElementById("body");
+
+  pokedexSeperate.classList.toggle("hidden");
+  body.classList.toggle("stop-scrolling");
 }
